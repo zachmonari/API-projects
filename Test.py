@@ -1,4 +1,5 @@
 import requests
+"""
 #get a webpage
 r = requests.get('https://api.github.com/events')
 #make HTTP POST request
@@ -30,6 +31,7 @@ payload = {'key1': 'value1', 'key2': 'value2'}
 r = requests.post('https://httpbin.org/post', data=payload)
 print(r.text)
 
+#working with randomuser.me APIs
 r = requests.get('https://randomuser.me/api')
 #print(r.status_code)
 #print(r.json())
@@ -52,3 +54,10 @@ print(f'{street} {number}')
 
 age=r.json()['results'][0]['dob']['age']
 print(f"Age: ",age)
+
+"""
+#working with randomfox.ca APIs
+r = requests.get('https://randomfox.ca/api')
+
+fox=r.json()
+print(fox['image'])
