@@ -10,7 +10,10 @@ def home():
 @app.get("/student/{student_id}")
 def get_student(student_id: int):
     return {"student_id": student_id}
+
+get_student(1)
 #GET with Query Parameter
 @app.get("/vibration/energy")
 def compute_energy(amplitude: float, mass: float):
     return {"energy": 0.5 * mass * amplitude**2}
+compute_energy(3.0, 3.0)
