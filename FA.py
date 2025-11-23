@@ -38,3 +38,6 @@ class Book(BaseModel):
     author: str
     pages: int
     description: Optional[str] = None
+
+# Fake in-memory database
+books_db: List[Book] = []
