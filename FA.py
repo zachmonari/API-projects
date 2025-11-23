@@ -54,3 +54,10 @@ def create_book(book: Book):
 
     books_db.append(book)
     return book
+
+# ------------------------
+# 2️⃣ READ ALL (GET)
+# ------------------------
+@app.get("/books", response_model=List[Book])
+def get_all_books():
+    return books_db
