@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
+from typing import Optional, List
 
 app=FastAPI()
 
@@ -18,7 +20,7 @@ def compute_energy(amplitude: float, mass: float):
     return {"energy": 0.5 * mass * amplitude**2}
 compute_energy(3.0, 3.0)
 
-class Book():
+class Book(BaseModel):
     title: str
     author: str
     pages: int
