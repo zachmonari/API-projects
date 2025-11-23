@@ -41,3 +41,16 @@ class Book(BaseModel):
 
 # Fake in-memory database
 books_db: List[Book] = []
+
+# ------------------------
+# 1️⃣ CREATE (POST)
+# ------------------------
+@app.post("/books", response_model=Book)
+def create_book(book: Book):
+    # Check if ID already exists
+    for b in books_db:
+        if b.id == book.id:
+            raise HTTPException(status_code=400, detail="Book with this ID already exists")
+
+    books_db.append(book)
+    return book
