@@ -71,3 +71,15 @@ def get_book(book_id: int):
         if book.id == book_id:
             return book
     raise HTTPException(status_code=404, detail="Book not found")
+
+# ------------------------
+# 5️⃣ DELETE (DELETE)
+# ------------------------
+@app.delete("/books/{book_id}")
+def delete_book(book_id: int):
+    for index, book in enumerate(books_db):
+        if book.id == book_id:
+            del books_db[index]
+            return {"message": "Book deleted successfully"}
+
+    raise HTTPException(status_code=404, detail="Book not found")
