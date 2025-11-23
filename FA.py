@@ -27,3 +27,14 @@ class Book(BaseModel):
 @app.post("/add-book")
 def add_book(book: Book):
     return {"message": "Book added!", "data": book}
+
+# Full example
+# ------------------------
+# DATA MODEL
+# ------------------------
+class Book(BaseModel):
+    id: int
+    title: str
+    author: str
+    pages: int
+    description: Optional[str] = None
