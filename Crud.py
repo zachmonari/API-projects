@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 import Models, Schemas
+from Auth import hash_password, verify_password
 
 def get_books(db: Session):
     return db.query(Models.Book).all()
