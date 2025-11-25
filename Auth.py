@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 
 from datetime import datetime, timedelta
-from jose import JWTError, jwt
+from jose import  jwt
 from passlib.context import CryptContext
 
 # Hashing settings
@@ -22,6 +22,6 @@ def verify_password(plain_password, hashed_password):
 
 def create_access_token(data: dict):
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
