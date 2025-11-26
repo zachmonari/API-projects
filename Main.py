@@ -15,3 +15,44 @@ app = FastAPI()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
+# ---------------------- AUTH HELPERS ---------------------- #
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    invalid = HTTPException(status_code=401, detail="Invalid authentication")
+
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise invalid
+    except JWTError:
+        raise invalid
+
+    user = Crud.get_user_by_username(db, username)
+    if user is None:
+        raise invalid
+    return user
+
+
+# ---------------------- ROUTES ---------------------------- #
+
+@app.post("/register", response_model=Schemas.User)
+def register(user: Schemas.UserCreate, db: Session = Depends(get_db)):
+    existing = Crud.get_user_by_username(db, user.username)
+    if existing:
+        raise HTTPException(status_code=400, detail="Username already exists")
+    return Crud.create_user(db, user)
+
+
+@app.post("/login", response_model=Schemas.Token)
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = Crud.authenticate_user(db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid username or password")
+
+    token = create_access_token({"sub": user.username})
+    return {"access_token": token, "token_type": "bearer"}
+
+
+@app.get("/protected")
+def protected_route(current_user: Schemas.User = Depends(get_current_user)):
+    return {"message": f"Hello {current_user.username}, you accessed a protected route!"}
