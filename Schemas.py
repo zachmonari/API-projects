@@ -15,3 +15,20 @@ class User(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+
+class BookBase(BaseModel):
+    title: str
+    author: str
+    pages: int
+    description: str | None = None
+
+class BookCreate(BookBase):
+    pass
+
+class Book(BookBase):
+    id: int
+    owner_id: int
+
+    class Config:
+        from_attributes = True  # replaces orm_mode
