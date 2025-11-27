@@ -76,3 +76,18 @@ def read_book(book_id: int, db: Session = Depends(get_db), current_user: Schemas
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
     return book
+
+@app.put("/books/{book_id}", response_model=Book)
+def modify_book(book_id: int, book_data: BookCreate, db: Session = Depends(get_db), current_user: Schemas.User = Depends(get_current_user)):
+    updated = update_book(db, book_id, book_data, current_user.id)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Book not found")
+    return updated
+
+
+@app.delete("/books/{book_id}")
+def remove_book(book_id: int, db: Session = Depends(get_db), current_user: Schemas.User = Depends(get_current_user)):
+    deleted = delete_book(db, book_id, current_user.id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Book not found")
+    return {"message": "Book deleted successfully"}
