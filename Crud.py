@@ -43,3 +43,13 @@ def get_book(db: Session, book_id: int, user_id: int):
         Models.Book.id == book_id,
         Models.Book.owner_id == user_id
     ).first()
+
+def update_book(db: Session, book_id: int, book_data, user_id: int):
+    book = get_book(db, book_id, user_id)
+    if not book:
+        return None
+    for key, value in book_data.dict().items():
+        setattr(book, key, value)
+    db.commit()
+    db.refresh(book)
+    return book
