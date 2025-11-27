@@ -8,6 +8,9 @@ import Models
 from Database import engine, get_db
 import Schemas
 import Crud
+from Schemas import BookCreate, Book
+from Crud import create_book, get_books, get_book, update_book, delete_book
+
 
 Models.Base.metadata.create_all(bind=engine)
 
