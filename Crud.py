@@ -20,3 +20,16 @@ def authenticate_user(db: Session, username: str, password: str):
     if not verify_password(password, user.hashed_password):
         return None
     return user
+
+def create_book(db: Session, book_data, user_id: int):
+    new_book = Models.Book(
+        title=book_data.title,
+        author=book_data.author,
+        pages=book_data.pages,
+        description=book_data.description,
+        owner_id=user_id
+    )
+    db.add(new_book)
+    db.commit()
+    db.refresh(new_book)
+    return new_book
