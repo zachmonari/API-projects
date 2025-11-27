@@ -33,3 +33,13 @@ def create_book(db: Session, book_data, user_id: int):
     db.commit()
     db.refresh(new_book)
     return new_book
+
+def get_books(db: Session, user_id: int):
+    return db.query(Models.Book).filter(Models.Book.owner_id == user_id).all()
+
+
+def get_book(db: Session, book_id: int, user_id: int):
+    return db.query(Models.Book).filter(
+        Models.Book.id == book_id,
+        Models.Book.owner_id == user_id
+    ).first()
