@@ -59,3 +59,20 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 @app.get("/protected")
 def protected_route(current_user: Schemas.User = Depends(get_current_user)):
     return {"message": f"Hello {current_user.username}, you accessed a protected route!"}
+
+@app.post("/books", response_model=Book)
+def create_new_book(book: BookCreate, db: Session = Depends(get_db), current_user: Schemas.User = Depends(get_current_user)):
+    return create_book(db, book, current_user.id)
+
+
+@app.get("/books", response_model=list[Book])
+def list_books(db: Session = Depends(get_db), current_user: Schemas.User = Depends(get_current_user)):
+    return get_books(db, current_user.id)
+
+
+@app.get("/books/{book_id}", response_model=Book)
+def read_book(book_id: int, db: Session = Depends(get_db), current_user: Schemas.User = Depends(get_current_user)):
+    book = get_book(db, book_id, current_user.id)
+    if not book:
+        raise HTTPException(status_code=404, detail="Book not found")
+    return book
