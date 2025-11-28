@@ -80,3 +80,14 @@ elif choice == "Login":
 
     if st.session_state["token"]:
         st.info("You are logged in ✔")
+
+# LOAD BOOKS
+    if st.button("Refresh Books"):
+        res = get_books()
+        if res.status_code == 200:
+            st.session_state["books"] = res.json()
+        else:
+            st.error("Failed to load books")
+
+    books = st.session_state.get("books", [])
+
