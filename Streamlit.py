@@ -102,3 +102,33 @@ elif choice == "Login":
     else:
         st.info("No books found. Add one below.")
 
+# CREATE BOOK FORM
+    st.subheader("➕ Add New Book")
+
+    new_title = st.text_input("Title")
+    new_author = st.text_input("Author")
+    new_pages = st.number_input("Pages", min_value=1)
+    new_desc = st.text_area("Description")
+
+    if st.button("Add Book"):
+        data = {
+            "title": new_title,
+            "author": new_author,
+            "pages": new_pages,
+            "description": new_desc
+        }
+        res = create_book(data)
+
+        if res.status_code == 200:
+            st.success("Book added!")
+        else:
+            st.error(res.json())
+
+    st.subheader("✏ Update or Delete a Book")
+
+    book_id = st.number_input("Book ID", min_value=1)
+
+    updated_title = st.text_input("New Title")
+    updated_author = st.text_input("New Author")
+    updated_pages = st.number_input("New Pages", min_value=1)
+    updated_desc = st.text_area("New Description")
