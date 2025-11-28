@@ -91,3 +91,14 @@ elif choice == "Login":
 
     books = st.session_state.get("books", [])
 
+# DISPLAY BOOKS
+    if books:
+        for book in books:
+            st.write(f"### {book['title']}")
+            st.write(f"Author: {book['author']}")
+            st.write(f"Pages: {book['pages']}")
+            st.write(f"Description: {book['description']}")
+            st.write("---")
+    else:
+        st.info("No books found. Add one below.")
+
