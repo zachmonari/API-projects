@@ -10,13 +10,13 @@ if "token" not in st.session_state:
 # ---- AUTH FUNCTIONS ----
 def register_user(username, password):
     payload = {"username": username, "password": password}
-    response = requests.post(f"{API_URL}/auth/register", json=payload)
+    response = requests.post(f"{API_URL}/register", json=payload)
     return response
 
 
 def login_user(username, password):
     payload = {"username": username, "password": password}
-    response = requests.post(f"{API_URL}/auth/login", data=payload)
+    response = requests.post(f"{API_URL}/login", data=payload)
     if response.status_code == 200:
         st.session_state["token"] = response.json()["access_token"]
     return response
@@ -24,7 +24,7 @@ def login_user(username, password):
 # ---- BOOK FUNCTIONS ----
 def get_books():
     headers = {"Authorization": f"Bearer {st.session_state['token']}"}
-    return requests.get(f"{API_URL}/books/", headers=headers)
+    return requests.get(f"{API_URL}/books", headers=headers)
 
 
 def create_book(data):
