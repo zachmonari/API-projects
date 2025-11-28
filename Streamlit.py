@@ -62,3 +62,21 @@ if choice == "Register":
             st.success("Account created!")
         else:
             st.error(response.json().get("detail", "Something went wrong"))
+
+# --- LOGIN PAGE ---
+elif choice == "Login":
+    st.subheader("Login to Your Account")
+
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+
+    if st.button("Login"):
+        response = login_user(username, password)
+
+        if response.status_code == 200:
+            st.success("Login successful!")
+        else:
+            st.error("Invalid username or password")
+
+    if st.session_state["token"]:
+        st.info("You are logged in ✔")
