@@ -47,3 +47,18 @@ st.title("📘 Book Management App (FastAPI + Streamlit)")
 
 menu = ["Login", "Register", "Books"]
 choice = st.sidebar.selectbox("Menu", menu)
+
+# --- REGISTER PAGE ---
+if choice == "Register":
+    st.subheader("Create an Account")
+
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+
+    if st.button("Register"):
+        response = register_user(username, password)
+
+        if response.status_code == 200:
+            st.success("Account created!")
+        else:
+            st.error(response.json().get("detail", "Something went wrong"))
