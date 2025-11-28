@@ -40,3 +40,10 @@ def update_book(book_id, data):
 def delete_book(book_id):
     headers = {"Authorization": f"Bearer {st.session_state['token']}"}
     return requests.delete(f"{API_URL}/books/{book_id}", headers=headers)
+
+# ---- STREAMLIT UI ----
+
+st.title("📘 Book Management App (FastAPI + Streamlit)")
+
+menu = ["Login", "Register", "Books"]
+choice = st.sidebar.selectbox("Menu", menu)
