@@ -132,3 +132,24 @@ elif choice == "Login":
     updated_author = st.text_input("New Author")
     updated_pages = st.number_input("New Pages", min_value=1)
     updated_desc = st.text_area("New Description")
+
+    if st.button("Update Book"):
+        data = {
+            "title": updated_title,
+            "author": updated_author,
+            "pages": updated_pages,
+            "description": updated_desc
+        }
+        res = update_book(book_id, data)
+
+        if res.status_code == 200:
+            st.success("Book updated!")
+        else:
+            st.error(res.json())
+
+    if st.button("Delete Book"):
+        res = delete_book(book_id)
+        if res.status_code == 200:
+            st.success("Book deleted!")
+        else:
+            st.error("Failed to delete book")
