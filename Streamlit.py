@@ -83,9 +83,33 @@ if st.session_state.token:
 
 st.sidebar.markdown("---")
 st.sidebar.info("FastAPI + Streamlit UI")
+st.caption("© 2025 ZachTechs")
 
 
+# ---------------------------
+# LOGIN PAGE
+# ---------------------------
+if choice == "Login":
+    st.markdown('<div class="title">🔐 Login</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle">Access your account</div>', unsafe_allow_html=True)
 
+    with st.form(key="login_form"):
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        submit = st.form_submit_button("Login")
+
+    if submit:
+        res = requests.post(f"{API_BASE}/login", json={
+            "username": username,
+            "password": password
+        })
+
+        if res.status_code == 200:
+            st.session_state.token = res.json()["access_token"]
+            st.success("Login successful!")
+            st.rerun()
+        else:
+            st.error("Invalid credentials.")
 
 
 
