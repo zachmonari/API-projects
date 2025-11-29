@@ -1,11 +1,32 @@
 import requests
 import streamlit as st
 from PIL import Image
-API_URL = "http://localhost:8000"  # FastAPI URL
 
-# ---- SESSION STATE ----
+# ---------------------------
+# CONFIG
+# ---------------------------
+API_BASE = "http://127.0.0.1:8000"  # FastAPI backend
+
+st.set_page_config(
+    page_title="Library App",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# ------------------------------------
+# SESSION STATE DEFAULTS
+# ------------------------------------
+if "dark_mode" not in st.session_state:
+    st.session_state.dark_mode = False
+
 if "token" not in st.session_state:
-    st.session_state["token"] = None
+    st.session_state.token = None
+
+
+# ------------------------------------
+# DARK MODE CSS
+# ------------------------------------
+
 
 # ---- AUTH FUNCTIONS ----
 def register_user(username, password):
