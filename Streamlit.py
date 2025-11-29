@@ -154,3 +154,5 @@ elif choice == "Login":
             st.success("Book deleted!")
         else:
             st.error("Failed to delete book")
+
+st.caption("© 2025 ZachTechs")
