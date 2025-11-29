@@ -5,6 +5,8 @@ from PIL import Image
 # ---------------------------
 # CONFIG
 # ---------------------------
+logo=Image.open("ZachTechs.jpg")
+st.image(logo, width=150)
 API_BASE = "http://127.0.0.1:8000"  # FastAPI backend
 
 st.set_page_config(
@@ -75,11 +77,13 @@ if dark_mode_toggle != st.session_state.dark_mode:
     st.rerun()
 
 # Logout button (visible only if logged in)
-if st.session_state.token:
-    if st.sidebar.button("🚪 Logout"):
-        st.session_state.token = None
-        st.success("Logged out successfully.")
-        st.rerun()
+def logout():
+    if st.session_state.token:
+        if st.sidebar.button("🚪 Logout"):
+            st.session_state.token = None
+            st.success("Logged out successfully.")
+            st.rerun()
+logout()
 
 st.sidebar.markdown("---")
 st.sidebar.info("FastAPI + Streamlit UI")
@@ -139,80 +143,77 @@ elif choice == "Register":
                 st.error("Registration failed. Username might be taken.")
 
 
+# ---------------------------
+# BOOKS PAGE (CRUD)
+# ---------------------------
+elif choice == "Books":
+    st.markdown('<div class="title">📚 Books</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle">Manage your book collection</div>', unsafe_allow_html=True)
+
+    if not st.session_state.token:
+        st.warning("Please login first.")
+
+
+    token = st.session_state.token
+    headers = {"Authorization": f"Bearer {token}"}
+
+    # Fetch books
+    import requests
+    from requests.exceptions import RequestException
+
+    # Fetch books
+    try:
+        response = requests.get(f"{API_BASE}/books", headers=headers)
+        response.raise_for_status()  # raises an error for 4xx and 5xx responses
+        books = response.json()
+        st.table(books)
+
+    except RequestException as e:
+        st.error(f"Network error: {str(e)}")
+        st.stop()
+
+    except ValueError:
+        st.error("Invalid JSON response from backend.")
+        st.stop()
+
+    except Exception as e:
+        st.error(f"Unexpected error: {str(e)}")
+        st.stop()
 
 
 
-# LOAD BOOKS
-    if st.button("Refresh Books"):
-        res = get_books()
-        if res.status_code == 200:
-            st.session_state["books"] = res.json()
-        else:
-            st.error("Failed to load books")
+    # Add Book
+    st.markdown("### ➕ Add Book")
+    with st.form("add_book"):
+        title = st.text_input("Book Title")
+        author = st.text_input("Author")
+        submit = st.form_submit_button("Add")
 
-    books = st.session_state.get("books", [])
-
-# DISPLAY BOOKS
-    if books:
-        for book in books:
-            st.write(f"### {book['title']}")
-            st.write(f"Author: {book['author']}")
-            st.write(f"Pages: {book['pages']}")
-            st.write(f"Description: {book['description']}")
-            st.write("---")
-    else:
-        st.info("No books found. Add one below.")
-
-# CREATE BOOK FORM
-    st.subheader("➕ Add New Book")
-
-    new_title = st.text_input("Title")
-    new_author = st.text_input("Author")
-    new_pages = st.number_input("Pages", min_value=1)
-    new_desc = st.text_area("Description")
-
-    if st.button("Add Book"):
-        data = {
-            "title": new_title,
-            "author": new_author,
-            "pages": new_pages,
-            "description": new_desc
-        }
-        res = create_book(data)
+    if submit:
+        res = requests.post(f"{API_BASE}/books", json={
+            "title": title,
+            "author": author
+        }, headers=headers)
 
         if res.status_code == 200:
             st.success("Book added!")
+            st.rerun()
         else:
-            st.error(res.json())
+            st.error("Failed to add book.")
 
-    st.subheader("✏ Update or Delete a Book")
-
-    book_id = st.number_input("Book ID", min_value=1)
-
-    updated_title = st.text_input("New Title")
-    updated_author = st.text_input("New Author")
-    updated_pages = st.number_input("New Pages", min_value=1)
-    updated_desc = st.text_area("New Description")
-
-    if st.button("Update Book"):
-        data = {
-            "title": updated_title,
-            "author": updated_author,
-            "pages": updated_pages,
-            "description": updated_desc
-        }
-        res = update_book(book_id, data)
-
+    # Delete Book
+    st.markdown("### ❌ Delete Book")
+    book_id = st.number_input("Book ID", min_value=1, step=1)
+    if st.button("Delete"):
+        res = requests.delete(f"{API_BASE}/books/{book_id}", headers=headers)
         if res.status_code == 200:
-            st.success("Book updated!")
+            st.success("Book deleted.")
+            st.rerun()
         else:
-            st.error(res.json())
+            st.error("Deletion failed.")
 
-    if st.button("Delete Book"):
-        res = delete_book(book_id)
-        if res.status_code == 200:
-            st.success("Book deleted!")
-        else:
-            st.error("Failed to delete book")
+
+
+
 
 st.caption("© 2025 ZachTechs")
