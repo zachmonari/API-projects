@@ -103,7 +103,7 @@ if choice == "Login":
         submit = st.form_submit_button("Login")
 
     if submit:
-        res = requests.post(f"{API_BASE}/login", json={
+        res = requests.post(f"{API_BASE}/login", data={
             "username": username,
             "password": password
         })
@@ -187,12 +187,17 @@ elif choice == "Books":
     with st.form("add_book"):
         title = st.text_input("Book Title")
         author = st.text_input("Author")
+        pages = st.number_input("Pages", min_value=1)
+        description = st.text_area("Description", "")
         submit = st.form_submit_button("Add")
+
 
     if submit:
         res = requests.post(f"{API_BASE}/books", json={
             "title": title,
-            "author": author
+            "author": author,
+            "pages": pages,
+            "description": description
         }, headers=headers)
 
         if res.status_code == 200:
