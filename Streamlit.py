@@ -111,47 +111,36 @@ if choice == "Login":
         else:
             st.error("Invalid credentials.")
 
+# ---------------------------
+# REGISTER PAGE
+# ---------------------------
+elif choice == "Register":
+    st.markdown('<div class="title">📝 Register</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle">Create your account</div>', unsafe_allow_html=True)
 
+    with st.form("register_form"):
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        confirm = st.text_input("Confirm password", type="password")
+        submit = st.form_submit_button("Register")
 
-# ---- STREAMLIT UI ----
-
-st.title("📘 Book Management App (FastAPI + Streamlit)")
-
-menu = ["Login", "Register", "Books"]
-choice = st.sidebar.selectbox("Menu", menu)
-
-# --- REGISTER PAGE ---
-if choice == "Register":
-    st.subheader("Create an Account")
-
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-
-    if st.button("Register"):
-        response = register_user(username, password)
-
-        if response.status_code == 200:
-            st.success("Account created!")
+    if submit:
+        if password != confirm:
+            st.error("Passwords do not match!")
         else:
-            st.error(response.json().get("detail", "Something went wrong"))
+            res = requests.post(f"{API_BASE}/register", json={
+                "username": username,
+                "password": password
+            })
 
-# --- LOGIN PAGE ---
-elif choice == "Login":
-    st.subheader("Login to Your Account")
+            if res.status_code == 200:
+                st.success("Account created!")
+            else:
+                st.error("Registration failed. Username might be taken.")
 
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
 
-    if st.button("Login"):
-        response = login_user(username, password)
 
-        if response.status_code == 200:
-            st.success("Login successful!")
-        else:
-            st.error("Invalid username or password")
 
-    if st.session_state["token"]:
-        st.info("You are logged in ✔")
 
 # LOAD BOOKS
     if st.button("Refresh Books"):
