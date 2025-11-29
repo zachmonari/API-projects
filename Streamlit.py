@@ -26,41 +26,43 @@ if "token" not in st.session_state:
 # ------------------------------------
 # DARK MODE CSS
 # ------------------------------------
+def apply_dark_mode():
+    if st.session_state.dark_mode:
+        st.markdown("""
+            <style>
+                body { background-color: #1e1e1e; }
+                .title { color: #f1f1f1 !important; }
+                .subtitle { color: #bbbbbb !important; }
+                .stButton>button {
+                    background-color: #333333 !important;
+                    color: white !important;
+                }
+                .card {
+                    background-color: #2b2b2b !important;
+                    color: white !important;
+                    box-shadow: 0px 2px 8px rgba(255,255,255,0.05);
+                }
+            </style>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+            <style>
+                body { background-color: #f5f7fa; }
+                .card {
+                    background-color: white;
+                    box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+                }
+            </style>
+        """, unsafe_allow_html=True)
 
 
-# ---- AUTH FUNCTIONS ----
-def register_user(username, password):
-    payload = {"username": username, "password": password}
-    response = requests.post(f"{API_URL}/register", json=payload)
-    return response
+apply_dark_mode()
 
 
-def login_user(username, password):
-    payload = {"username": username, "password": password}
-    response = requests.post(f"{API_URL}/login", data=payload)
-    if response.status_code == 200:
-        st.session_state["token"] = response.json()["access_token"]
-    return response
-
-# ---- BOOK FUNCTIONS ----
-def get_books():
-    headers = {"Authorization": f"Bearer {st.session_state['token']}"}
-    return requests.get(f"{API_URL}/books", headers=headers)
 
 
-def create_book(data):
-    headers = {"Authorization": f"Bearer {st.session_state['token']}"}
-    return requests.post(f"{API_URL}/books/", json=data, headers=headers)
 
 
-def update_book(book_id, data):
-    headers = {"Authorization": f"Bearer {st.session_state['token']}"}
-    return requests.put(f"{API_URL}/books/{book_id}", json=data, headers=headers)
-
-
-def delete_book(book_id):
-    headers = {"Authorization": f"Bearer {st.session_state['token']}"}
-    return requests.delete(f"{API_URL}/books/{book_id}", headers=headers)
 
 # ---- STREAMLIT UI ----
 logo=Image.open("ZachTechs.jpg")
