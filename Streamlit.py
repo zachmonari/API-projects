@@ -58,6 +58,31 @@ def apply_dark_mode():
 
 apply_dark_mode()
 
+# ---------------------------
+# SIDEBAR NAVIGATION + TOOLS
+# ---------------------------
+logo=Image.open("ZachTechs.jpg")
+st.sidebar.image(logo, width=150)
+st.sidebar.title("📚 Library System")
+
+pages = ["Login", "Register", "Books"]
+choice = st.sidebar.selectbox("📌 Navigation", pages)
+
+# Dark mode toggle
+dark_mode_toggle = st.sidebar.checkbox("🌙 Dark mode", value=st.session_state.dark_mode)
+if dark_mode_toggle != st.session_state.dark_mode:
+    st.session_state.dark_mode = dark_mode_toggle
+    st.rerun()
+
+# Logout button (visible only if logged in)
+if st.session_state.token:
+    if st.sidebar.button("🚪 Logout"):
+        st.session_state.token = None
+        st.success("Logged out successfully.")
+        st.rerun()
+
+st.sidebar.markdown("---")
+st.sidebar.info("FastAPI + Streamlit UI")
 
 
 
@@ -65,8 +90,7 @@ apply_dark_mode()
 
 
 # ---- STREAMLIT UI ----
-logo=Image.open("ZachTechs.jpg")
-st.image(logo, width=150)
+
 st.title("📘 Book Management App (FastAPI + Streamlit)")
 
 menu = ["Login", "Register", "Books"]
