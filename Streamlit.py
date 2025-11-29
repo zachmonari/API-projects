@@ -87,7 +87,7 @@ logout()
 
 st.sidebar.markdown("---")
 st.sidebar.info("FastAPI + Streamlit UI")
-st.caption("© 2025 ZachTechs")
+st.sidebar.caption("© 2025 ZachTechs")
 
 
 # ---------------------------
