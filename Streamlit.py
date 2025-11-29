@@ -1,6 +1,6 @@
 import requests
 import streamlit as st
-
+from PIL import Image
 API_URL = "http://localhost:8000"  # FastAPI URL
 
 # ---- SESSION STATE ----
@@ -42,7 +42,8 @@ def delete_book(book_id):
     return requests.delete(f"{API_URL}/books/{book_id}", headers=headers)
 
 # ---- STREAMLIT UI ----
-
+logo=Image.open("ZachTechs.jpg")
+st.image(logo, width=150)
 st.title("📘 Book Management App (FastAPI + Streamlit)")
 
 menu = ["Login", "Register", "Books"]
